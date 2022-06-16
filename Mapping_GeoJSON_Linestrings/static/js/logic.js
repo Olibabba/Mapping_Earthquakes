@@ -33,6 +33,12 @@ const cityData = cities
 // }).addTo(map);
 
 // We create the tile layer that will be the background of our map.
+let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+});
+
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -48,15 +54,16 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 // streets.addTo(map);
 // Create a base layer that holds both maps.
 let baseMaps = {
+    Light: light,
     Street: streets,
     Dark: dark
   };
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-    center: [30, 30],
+    center: [44.0, -80.0],
     zoom: 2,
-    layers: [streets]
+    layers: [light]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.
@@ -64,6 +71,8 @@ L.control.layers(baseMaps).addTo(map);
 
 // Accessing the airport GeoJSON URL
 let airportData = "https://raw.githubusercontent.com/Olibabba/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GEOJSON_Points/static/js/majorAirports.json";
+let torontoData = "https://raw.githubusercontent.com/Olibabba/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/torontoRoutes.json"
+
 // for (let i = 0; i < cityData.length; i++){
 //     console.log(cityData[i].location)
 //     L.marker(cityData[i].location).addTo(map);
@@ -81,18 +90,10 @@ let airportData = "https://raw.githubusercontent.com/Olibabba/Mapping_Earthquake
 // });
 
 // Grabbing our GeoJSON data.
-// L.geoJSON(sanFranAirport).addTo(map);
-// Grabbing our GeoJSON data.
-d3.json(airportData).then(function(data) {
-    for (i = 0; i < data.features.length; i++) { 
-    console.log(data.features[i].properties.faa);
+d3.json(torontoData).then(function(data) {
+    console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
-    L.geoJSON(data)
-    .bindPopup(function (layer) {
-        console.log(layer.feature);
-        return ("<h2>"+ "Airport Code: " + layer.feature.properties.faa + "</h2> <hr> <h3>Airport Name: " + layer.feature.properties.name + "</h3>")
-    })
-        .addTo(map)
-    }
-    ;
-})
+  L.geoJSON(data).addTo(map);
+});
+    
+    
