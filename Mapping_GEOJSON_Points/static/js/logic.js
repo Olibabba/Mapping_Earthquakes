@@ -1,6 +1,6 @@
 // Add console.log to check to see if our code is working.
 console.log("working");
-console.log(cities)
+// console.log(cities)
 
 const cityData = cities
 // Loop through the cities array and create one marker for each city.
@@ -84,9 +84,15 @@ let airportData = "https://raw.githubusercontent.com/Olibabba/Mapping_Earthquake
 // L.geoJSON(sanFranAirport).addTo(map);
 // Grabbing our GeoJSON data.
 d3.json(airportData).then(function(data) {
-    console.log(data);
+    for (i = 0; i < data.features.length; i++) { 
+    console.log(data.features[i].properties.faa);
   // Creating a GeoJSON layer with the retrieved data.
-  L.geoJSON(data)
-  .bindPopup("<h2>"+ "Airport Code: " + data.faa + "</h2> <hr> <h3>Airport Name: " + data.name + "</h3>")
-  .addTo(map);
-});
+    L.geoJSON(data)
+    .bindPopup(function (layer) {
+        console.log(layer.feature);
+        return ("<h2>"+ "Airport Code: " + layer.feature.properties.faa + "</h2> <hr> <h3>Airport Name: " + layer.feature.properties.name + "</h3>")
+    })
+        .addTo(map)
+    }
+    ;
+})
